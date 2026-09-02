@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-// TODO: implement software PWM
-
 type SoftPWM struct {
 	line      *Line
 	frequency float64
@@ -29,7 +27,6 @@ func NewSoftPWM(line *Line, frequency float64) *SoftPWM {
 	}
 	pwm.SetDutyCycle(0)
 	go pwm.run()
-	//go pwm.dumpStatsForever()
 	return pwm
 }
 
