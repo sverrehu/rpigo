@@ -7,8 +7,8 @@ import (
 
 type SoftPWM struct {
 	line      *Line
-	frequency float64
-	period    time.Duration // nanoseconds per period
+	Frequency float64
+	Period    time.Duration // nanoseconds per Period
 	dutyCycle int           // [0-100]
 	timeOn    time.Duration
 	timeOff   time.Duration
@@ -20,8 +20,8 @@ type SoftPWM struct {
 func NewSoftPWM(line *Line, frequency float64) *SoftPWM {
 	pwm := &SoftPWM{
 		line:      line,
-		frequency: frequency,
-		period:    time.Duration(1e9 / frequency),
+		Frequency: frequency,
+		Period:    time.Duration(1e9 / frequency),
 		stop:      false,
 		periods:   0,
 	}
@@ -40,8 +40,8 @@ func (p *SoftPWM) SetDutyCycle(dutyCycle int) {
 		return
 	}
 	p.dutyCycle = dutyCycle
-	p.timeOn = time.Duration(float64(p.period) * float64(dutyCycle) / 100)
-	p.timeOff = p.period - p.timeOn
+	p.timeOn = time.Duration(float64(p.Period) * float64(dutyCycle) / 100)
+	p.timeOff = p.Period - p.timeOn
 }
 
 func (p *SoftPWM) setValue(value LineValue) error {
@@ -75,8 +75,9 @@ func (p *SoftPWM) run() {
 			p.stop = true
 		}
 		p.periods++
-		delay = p.period - time.Since(startTime)
+		delay = p.Period - time.Since(startTime)
 	}
+	_ = p.setValue(LineValueInactive)
 }
 
 func (p *SoftPWM) dumpStatsForever() {
@@ -87,5 +88,5 @@ func (p *SoftPWM) dumpStatsForever() {
 }
 func (p *SoftPWM) dumpStats() {
 	frequency := float64(p.periods) / time.Since(p.startTime).Seconds()
-	log.Printf("period: %s, periods: %d, time since start: %s, frequency: %f Hz (wanted %f Hz)", p.period, p.periods, time.Since(p.startTime), frequency, p.frequency)
+	log.Printf("period: %s, periods: %d, time since start: %s, frequency: %f Hz (wanted %f Hz)", p.Period, p.periods, time.Since(p.startTime), frequency, p.Frequency)
 }

@@ -2,6 +2,7 @@ package component
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/sverrehu/rpigo/gpio"
@@ -41,8 +42,10 @@ func (s *Servo) SetAngle(angle float64) error {
 	if angle < 0 || angle > float64(s.MaxAngle) {
 		return fmt.Errorf("angle must be between 0 and %d inclusive", s.MaxAngle)
 	}
-	// TODO: calculate duty cycle
-	dutyCycle := 0
+	pulseRange := s.PulseControlMax - s.PulseControlMin
+	pulseWidth := s.PulseControlMin + time.Duration(int64(angle*float64(pulseRange)/float64(s.MaxAngle)))
+	dutyCycle := int(float64(100*pulseWidth) / float64(s.PWM.Period))
+	log.Printf("angle: %f -> dutyCycle: %d", angle, dutyCycle)
 	s.PWM.SetDutyCycle(dutyCycle)
 	return nil
 }
