@@ -9,7 +9,7 @@ type SoftPWM struct {
 	line      *Line
 	Frequency float64
 	Period    time.Duration // nanoseconds per Period
-	dutyCycle int           // [0-100]
+	dutyCycle float64       // [0-100]
 	TimeOn    time.Duration
 	TimeOff   time.Duration
 	stop      bool
@@ -34,13 +34,13 @@ func (p *SoftPWM) Close() {
 	p.stop = true
 }
 
-func (p *SoftPWM) SetDutyCycle(dutyCycle int) {
+func (p *SoftPWM) SetDutyCycle(dutyCycle float64) {
 	if dutyCycle < 0 || dutyCycle > 100 {
 		log.Printf("duty cycle must be between 0 and 100, keeping it at %d", p.dutyCycle)
 		return
 	}
 	p.dutyCycle = dutyCycle
-	p.TimeOn = time.Duration(float64(p.Period) * float64(dutyCycle) / 100)
+	p.TimeOn = time.Duration(float64(p.Period) * dutyCycle / 100)
 	p.TimeOff = p.Period - p.TimeOn
 }
 
