@@ -45,8 +45,8 @@ func (s *Servo) SetAngle(angle float64) error {
 	pulseRange := s.PulseControlMax - s.PulseControlMin
 	pulseWidth := s.PulseControlMin + time.Duration(int64(angle*float64(pulseRange)/float64(s.MaxAngle)))
 	dutyCycle := int(float64(100*pulseWidth) / float64(s.PWM.Period))
-	log.Printf("angle: %f -> dutyCycle: %d", angle, dutyCycle)
 	s.PWM.SetDutyCycle(dutyCycle)
+	log.Printf("angle: %f -> dutyCycle: %d, on: %s, off: %s", angle, dutyCycle, s.PWM.TimeOn, s.PWM.TimeOff)
 	return nil
 }
 

@@ -10,8 +10,8 @@ type SoftPWM struct {
 	Frequency float64
 	Period    time.Duration // nanoseconds per Period
 	dutyCycle int           // [0-100]
-	timeOn    time.Duration
-	timeOff   time.Duration
+	TimeOn    time.Duration
+	TimeOff   time.Duration
 	stop      bool
 	startTime time.Time
 	periods   uint64
@@ -40,8 +40,8 @@ func (p *SoftPWM) SetDutyCycle(dutyCycle int) {
 		return
 	}
 	p.dutyCycle = dutyCycle
-	p.timeOn = time.Duration(float64(p.Period) * float64(dutyCycle) / 100)
-	p.timeOff = p.Period - p.timeOn
+	p.TimeOn = time.Duration(float64(p.Period) * float64(dutyCycle) / 100)
+	p.TimeOff = p.Period - p.TimeOn
 }
 
 func (p *SoftPWM) setValue(value LineValue) error {
@@ -64,11 +64,11 @@ func (p *SoftPWM) run() {
 		}
 		if p.dutyCycle > 0 {
 			err = p.setValue(LineValueActive)
-			time.Sleep(p.timeOn + timeAdjust)
+			time.Sleep(p.TimeOn + timeAdjust)
 		}
 		if err == nil && p.dutyCycle < 100 {
 			err = p.setValue(LineValueInactive)
-			time.Sleep(p.timeOff + timeAdjust)
+			time.Sleep(p.TimeOff + timeAdjust)
 		}
 		if err != nil {
 			log.Print("PWM error: ", err)
