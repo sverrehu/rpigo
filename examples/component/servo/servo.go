@@ -22,16 +22,15 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	servo.SetAngle(90)
-	time.Sleep(2 * time.Second)
+	defer servo.Close()
 	servo.SetAngle(0)
 	time.Sleep(2 * time.Second)
 	servo.SetAngle(45)
 	time.Sleep(2 * time.Second)
+	servo.SetAngle(90)
+	time.Sleep(2 * time.Second)
 	servo.SetAngle(135)
 	time.Sleep(2 * time.Second)
 	servo.SetAngle(180)
-	time.Sleep(2 * time.Second)
-	servo.SetAngle(90)
 	time.Sleep(2 * time.Second)
 }
