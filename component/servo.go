@@ -2,7 +2,6 @@ package component
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/sverrehu/rpigo/pwm"
@@ -44,7 +43,6 @@ func (s *Servo) SetAngle(angle float64) error {
 	pulseWidth := s.PulseControlMin + time.Duration(int64(angle*float64(pulseRange)/float64(s.MaxAngle)))
 	dutyCycle := float64(100*pulseWidth) / float64(s.PWM.GetPeriod())
 	s.PWM.SetDutyCycle(dutyCycle)
-	log.Printf("angle: %.1f -> dutyCycle: %.1f", angle, dutyCycle)
 	return nil
 }
 
